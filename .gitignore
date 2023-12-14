@@ -66,6 +66,3 @@ build/
 ### VS Code ###
 .vscode/
 .history
-
-### SECURITY ###
-application.properties

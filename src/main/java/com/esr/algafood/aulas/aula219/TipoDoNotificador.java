@@ -1,4 +1,4 @@
-package com.esr.algafood.aula219;
+package com.esr.algafood.aulas.aula219;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 

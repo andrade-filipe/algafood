@@ -10,6 +10,7 @@ import javax.persistence.*;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@AllArgsConstructor
 public class Cozinha {
 
     @Id

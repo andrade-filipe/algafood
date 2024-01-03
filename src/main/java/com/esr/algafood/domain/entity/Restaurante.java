@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
+@AllArgsConstructor
 public class Restaurante {
 
     @Id

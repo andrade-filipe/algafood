@@ -5,7 +5,6 @@ package com.esr.algafood.aulas.aula226;
 public class ConfigProperties {
 
     //para utilizar basta injetar essa classe em qualquer lugar
-
     private String hostServidor;
     private Integer portaServidor
 

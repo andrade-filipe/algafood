@@ -45,6 +45,6 @@ public class CozinhaMain {
 
         /*Delete*/
 
-        cadastroCozinha.remove(cozinhaEdit);
+        cadastroCozinha.delete(cozinhaEdit);
     }
 }

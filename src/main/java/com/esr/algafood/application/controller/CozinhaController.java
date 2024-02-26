@@ -4,7 +4,9 @@ import com.esr.algafood.domain.entity.Cozinha;
 import com.esr.algafood.domain.repository.CozinhaRepository;
 import com.esr.algafood.representation.model.xml.CozinhaXml;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Optional.*;
 
 @AllArgsConstructor
 @RestController
@@ -31,7 +35,13 @@ public class CozinhaController {
     }
 
     @GetMapping("/{cozinhaId}")
-    public Optional<Cozinha> buscar(@PathVariable Long cozinhaId){
-        return cozinhaRepository.findById(cozinhaId);
+    public ResponseEntity<Optional<Cozinha>> buscar(@PathVariable Long cozinhaId){
+        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
+
+        if(cozinha.isPresent()){
+            return ResponseEntity.ok(cozinha);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }

@@ -2,14 +2,11 @@ package com.esr.algafood.application.controller;
 
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.repository.RestauranteRepository;
-import com.esr.algafood.domain.service.RestauranteService;
+import com.esr.algafood.domain.service.CadastroRestauranteService;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +16,7 @@ import java.util.Optional;
 @RequestMapping("/restaurantes")
 public class RestauranteController {
     private RestauranteRepository restauranteRepository;
-    private RestauranteService restauranteService;
+    private CadastroRestauranteService restauranteService;
 
     @GetMapping()
     public List<Restaurante> listar(){
@@ -35,5 +32,11 @@ public class RestauranteController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Restaurante adicionar(@RequestBody Restaurante restaurante){
+        return restauranteService.salvar(restaurante);
     }
 }

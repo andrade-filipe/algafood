@@ -1,6 +1,7 @@
 package com.esr.algafood.application.controller;
 
 import com.esr.algafood.domain.entity.Restaurante;
+import com.esr.algafood.domain.exception.EntityNotFoundException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,13 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Restaurante adicionar(@RequestBody Restaurante restaurante){
-        return restauranteService.salvar(restaurante);
+    public ResponseEntity<Restaurante> adicionar(@RequestBody Restaurante restaurante) {
+        try {
+            restaurante = restauranteService.salvar(restaurante);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }

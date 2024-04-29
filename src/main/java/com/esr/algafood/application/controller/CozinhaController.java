@@ -1,14 +1,12 @@
 package com.esr.algafood.application.controller;
 
 import com.esr.algafood.domain.entity.Cozinha;
+import com.esr.algafood.domain.exception.EntityNotFoundException;
+import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.repository.CozinhaRepository;
 import com.esr.algafood.domain.service.CadastroCozinhaService;
-import com.esr.algafood.representation.model.xml.CozinhaXml;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
-
-import static java.util.Optional.*;
 
 @AllArgsConstructor
 @RestController
@@ -32,11 +27,6 @@ public class CozinhaController {
     @GetMapping
     public List<Cozinha> listar(){
         return cozinhaRepository.findAll();
-    }
-
-    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
-    public CozinhaXml listarXml(){
-        return new CozinhaXml(cozinhaRepository.findAll());
     }
 
     @GetMapping("/{cozinhaId}")
@@ -61,7 +51,7 @@ public class CozinhaController {
         try{
             Cozinha currCozinha = cozinhaRepository.findById(cozinhaId).get();
             BeanUtils.copyProperties(cozinha, currCozinha, "id");
-            cozinhaRepository.save(currCozinha);
+            cadastroCozinha.salvar(currCozinha);
             return ResponseEntity.ok(currCozinha);
         }catch (NoSuchElementException e){
             return ResponseEntity.notFound().build();
@@ -70,13 +60,13 @@ public class CozinhaController {
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId){
         try{
-            Cozinha currCozinha = cozinhaRepository.findById(cozinhaId).get();
-            cozinhaRepository.delete(currCozinha);
-
+            cadastroCozinha.excluir(cozinhaId);
             return ResponseEntity.noContent().build();
-        }catch(NoSuchElementException e){
+
+        }catch(EntityNotFoundException e){
             return ResponseEntity.notFound().build();
-        }catch(DataIntegrityViolationException e){
+
+        }catch(IsBeingUsedException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }

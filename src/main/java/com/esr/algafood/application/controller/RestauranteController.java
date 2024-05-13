@@ -5,6 +5,7 @@ import com.esr.algafood.domain.exception.EntityNotFoundException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +21,15 @@ public class RestauranteController {
     private CadastroRestauranteService restauranteService;
 
     @GetMapping()
-    public List<Restaurante> listar(){
+    public List<Restaurante> listar() {
         return restauranteRepository.findAll();
     }
 
     @GetMapping("/{restauranteId}")
-    public ResponseEntity<Optional<Restaurante>> buscar(@PathVariable Long restauranteId){
+    public ResponseEntity<Optional<Restaurante>> buscar(@PathVariable Long restauranteId) {
         Optional<Restaurante> restaurante = restauranteRepository.findById(restauranteId);
 
-        if(restaurante.isPresent()){
+        if (restaurante.isPresent()) {
             return ResponseEntity.ok(restaurante);
         }
 
@@ -37,13 +38,30 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Restaurante> adicionar(@RequestBody Restaurante restaurante) {
+    public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
         try {
             restaurante = restauranteService.salvar(restaurante);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{restauranteId}")
+    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
+        try {
+            Restaurante currRestaurante = restauranteRepository.findById(restauranteId).get();
+
+            if (currRestaurante != null) {
+                BeanUtils.copyProperties(restaurante, currRestaurante, "id");
+                currRestaurante = restauranteService.salvar(currRestaurante);
+                return ResponseEntity.ok(currRestaurante);
+            }
+            return ResponseEntity.notFound().build();
+
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }

@@ -59,7 +59,7 @@ public class CidadeController {
     }
 
     @DeleteMapping("/{cidadeId}")
-    public ResponseEntity<Cidade> remover(@PathVariable Long cidadeId){
+    public ResponseEntity<?> remover(@PathVariable Long cidadeId){
         try{
             cidadeService.excluir(cidadeId);
             return ResponseEntity.noContent().build();
@@ -68,7 +68,8 @@ public class CidadeController {
             return ResponseEntity.notFound().build();
 
         }catch(IsBeingUsedException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body("Recurso cidadeId: " + cidadeId + " está sendo utilizado");
         }
     }
 }

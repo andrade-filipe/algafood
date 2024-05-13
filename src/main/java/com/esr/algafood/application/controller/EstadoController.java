@@ -58,7 +58,7 @@ public class EstadoController {
     }
 
     @DeleteMapping("/{estadoId}")
-    public ResponseEntity<Estado> remover(@PathVariable Long estadoId){
+    public ResponseEntity<?> remover(@PathVariable Long estadoId){
         try{
             estadoService.excluir(estadoId);
             return ResponseEntity.noContent().build();
@@ -67,7 +67,7 @@ public class EstadoController {
             return ResponseEntity.notFound().build();
 
         }catch(IsBeingUsedException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Recurso estadoId: " + estadoId + " está sendo utilizado");
         }
     }
 }

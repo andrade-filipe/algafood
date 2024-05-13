@@ -1,10 +1,10 @@
 package com.esr.algafood.application.controller;
 
+import com.esr.algafood.domain.entity.Cidade;
 import com.esr.algafood.domain.entity.Estado;
-import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.EntityNotFoundException;
-import com.esr.algafood.domain.repository.EstadoRepository;
-import com.esr.algafood.domain.service.CadastroEstadoService;
+import com.esr.algafood.domain.repository.CidadeRepository;
+import com.esr.algafood.domain.service.CadastroCidadeService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,24 +14,24 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/estados")
-public class EstadoController {
+@RequestMapping("/cidades")
+public class CidadeController {
 
-    private EstadoRepository estadoRepository;
-    private CadastroEstadoService estadoService;
+    private CidadeRepository cidadeRepository;
+    private CadastroCidadeService cidadeService;
 
     @GetMapping
-    public List<Estado> listar(){
-        return estadoRepository.findAll();
+    public List<Cidade> listar(){
+        return cidadeRepository.findAll();
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> adicionar(@RequestBody Estado estado) {
+    public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
         try {
-            estado = estadoService.salvar(estado);
+            cidade = cidadeService.salvar(cidade);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(estado);
+            return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

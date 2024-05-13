@@ -8,7 +8,6 @@ import com.esr.algafood.domain.service.CadastroCozinhaService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +21,7 @@ import java.util.Optional;
 public class CozinhaController {
 
     private CozinhaRepository cozinhaRepository;
-    private CadastroCozinhaService cadastroCozinha;
+    private CadastroCozinhaService cozinhaService;
 
     @GetMapping
     public List<Cozinha> listar(){
@@ -43,7 +42,7 @@ public class CozinhaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cozinha adicionar(@RequestBody Cozinha cozinha){
-        return cadastroCozinha.salvar(cozinha);
+        return cozinhaService.salvar(cozinha);
     }
 
     @PutMapping("/{cozinhaId}")
@@ -51,7 +50,7 @@ public class CozinhaController {
         try{
             Cozinha currCozinha = cozinhaRepository.findById(cozinhaId).get();
             BeanUtils.copyProperties(cozinha, currCozinha, "id");
-            cadastroCozinha.salvar(currCozinha);
+            cozinhaService.salvar(currCozinha);
             return ResponseEntity.ok(currCozinha);
         }catch (NoSuchElementException e){
             return ResponseEntity.notFound().build();
@@ -60,7 +59,7 @@ public class CozinhaController {
     @DeleteMapping("/{cozinhaId}")
     public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId){
         try{
-            cadastroCozinha.excluir(cozinhaId);
+            cozinhaService.excluir(cozinhaId);
             return ResponseEntity.noContent().build();
 
         }catch(EntityNotFoundException e){

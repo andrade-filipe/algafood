@@ -28,12 +28,17 @@ public class CozinhaController {
         return cozinhaRepository.findAll();
     }
 
+    @GetMapping("/by-nome")
+    public List<Cozinha> cozinhaPorNome(@RequestParam("nome") String nome){
+        return cozinhaRepository.findByNomeContaining(nome);
+    }
+
     @GetMapping("/{cozinhaId}")
-    public ResponseEntity<Optional<Cozinha>> buscar(@PathVariable Long cozinhaId){
+    public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId){
         Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
 
         if(cozinha.isPresent()){
-            return ResponseEntity.ok(cozinha);
+            return ResponseEntity.ok(cozinha.get());
         }
 
         return ResponseEntity.notFound().build();

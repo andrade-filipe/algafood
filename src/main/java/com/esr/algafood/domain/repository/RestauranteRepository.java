@@ -19,4 +19,7 @@ public interface RestauranteRepository extends JpaRepository<Restaurante, Long> 
 
 //    @Query("from Restaurante where nome like %:nome%")
     List<Restaurante> testandoQuery(String nome);
+
+    /*RestauranteRepositoryImpl -> implementação customizada*/
+    List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal);
 }

@@ -4,8 +4,6 @@ import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.EntityNotFoundException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
-import com.esr.algafood.infrastructure.spec.RestauranteComFreteGratisSpec;
-import com.esr.algafood.infrastructure.spec.RestauranteComNomeSemelhanteSpec;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -15,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
+import static com.esr.algafood.infrastructure.spec.RestauranteSpecs.*;
 
 @AllArgsConstructor
 @RestController
@@ -75,9 +75,7 @@ public class RestauranteController {
 
     @GetMapping("/teste2")
     public List<Restaurante> restauranteComFreteGratis(String nome){
-        var comFreteGratis = new RestauranteComFreteGratisSpec();
-        var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
 
-        return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
+        return restauranteRepository.findAll(comFreteGratis().and(comNomeSemelhante(nome)));
     }
 }

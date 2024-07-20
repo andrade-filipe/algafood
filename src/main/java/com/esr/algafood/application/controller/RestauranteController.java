@@ -76,7 +76,7 @@ public class RestauranteController {
     @GetMapping("/teste2")
     public List<Restaurante> restauranteComFreteGratis(String nome){
         var comFreteGratis = new RestauranteComFreteGratisSpec();
-        var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec();
+        var comNomeSemelhante = new RestauranteComNomeSemelhanteSpec(nome);
 
         return restauranteRepository.findAll(comFreteGratis.and(comNomeSemelhante));
     }

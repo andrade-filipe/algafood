@@ -1,6 +1,14 @@
-create table cozinha (
-    id bigint not null auto_increment,
-    nome varchar(60) not null,
+CREATE TABLE cozinha (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(60) NOT NULL,
 
-    primary key (id)
-) engine=InnoDB default charset=utf8;
+    PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE cidade (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    nome_cidade VARCHAR(80) NOT NULL,
+    nome_estado VARCHAR(80) NOT NULL,
+
+    PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

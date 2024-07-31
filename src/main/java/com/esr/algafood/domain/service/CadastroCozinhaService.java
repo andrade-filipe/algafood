@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CadastroCozinhaService {
 
+    private static final String MSG_COZINHA_EM_USO = "Id: %d is being used";
+    private static final String MSG_COZINHA_NAO_ENCONTRADA = "Id: %d was not found in the database";
+
+
     private CozinhaRepository cozinhaRepository;
     public Cozinha salvar(Cozinha cozinha){
         return cozinhaRepository.save(cozinha);
@@ -23,12 +27,20 @@ public class CadastroCozinhaService {
             cozinhaRepository.deleteById(cozinhaId);
         } catch (EmptyResultDataAccessException e){
             throw new EntityNotFoundException(
-                String.format("Id: %d was not found in the database", cozinhaId)
+                String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)
             );
         } catch (DataIntegrityViolationException e){
             throw new IsBeingUsedException(
-                String.format("Id: %d is being used", cozinhaId)
+                String.format(MSG_COZINHA_EM_USO, cozinhaId)
             );
         }
+    }
+
+    public Cozinha buscarOuFalhar(Long cozinhaId){
+        return cozinhaRepository.findById(cozinhaId)
+            .orElseThrow(() -> new EntityNotFoundException(
+                String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)
+                )
+            );
     }
 }

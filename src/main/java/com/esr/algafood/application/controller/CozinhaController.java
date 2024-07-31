@@ -10,6 +10,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -34,14 +35,8 @@ public class CozinhaController {
     }
 
     @GetMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> buscar(@PathVariable Long cozinhaId){
-        Optional<Cozinha> cozinha = cozinhaRepository.findById(cozinhaId);
-
-        if(cozinha.isPresent()){
-            return ResponseEntity.ok(cozinha.get());
-        }
-
-        return ResponseEntity.notFound().build();
+    public Cozinha buscar(@PathVariable Long cozinhaId){
+        return cozinhaService.buscarOuFalhar(cozinhaId);
     }
 
     @PostMapping
@@ -61,6 +56,7 @@ public class CozinhaController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @DeleteMapping("/{cozinhaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cozinhaId){

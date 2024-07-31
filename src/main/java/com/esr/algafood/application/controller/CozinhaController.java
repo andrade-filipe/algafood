@@ -46,15 +46,12 @@ public class CozinhaController {
     }
 
     @PutMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
-        try{
-            Cozinha currCozinha = cozinhaRepository.findById(cozinhaId).get();
-            BeanUtils.copyProperties(cozinha, currCozinha, "id");
-            cozinhaService.salvar(currCozinha);
-            return ResponseEntity.ok(currCozinha);
-        }catch (NoSuchElementException e){
-            return ResponseEntity.notFound().build();
-        }
+    public Cozinha atualizar(@PathVariable Long cozinhaId, @RequestBody Cozinha cozinha){
+        Cozinha currCozinha = cozinhaService.buscarOuFalhar(cozinhaId);
+
+        BeanUtils.copyProperties(cozinha, currCozinha, "id");
+
+        return cozinhaService.salvar(currCozinha);
     }
 
     @DeleteMapping("/{cozinhaId}")

@@ -62,16 +62,8 @@ public class CozinhaController {
         }
     }
     @DeleteMapping("/{cozinhaId}")
-    public ResponseEntity<Cozinha> remover(@PathVariable Long cozinhaId){
-        try{
-            cozinhaService.excluir(cozinhaId);
-            return ResponseEntity.noContent().build();
-
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-
-        }catch(IsBeingUsedException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cozinhaId){
+        cozinhaService.excluir(cozinhaId);
     }
 }

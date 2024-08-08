@@ -13,6 +13,12 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class CadastroEstadoService {
 
+    private static final String MSG_ESTADO_EM_USO  =
+        "Estado de código %d não pode ser removido, pois está em uso";
+
+    private static final String MSG_ESTADO_NAO_ENCONTRADO =
+        "Não existe um cadastro de estado com código %d";
+
     private EstadoRepository estadoRepository;
 
     public Estado salvar(Estado estado){
@@ -20,16 +26,22 @@ public class CadastroEstadoService {
     }
 
     public void excluir(Long estadoId){
-        try{
+        try {
             estadoRepository.deleteById(estadoId);
-        } catch (EmptyResultDataAccessException e){
+
+        } catch (EmptyResultDataAccessException e) {
             throw new EntityNotFoundException(
-                String.format("Id: %d was not found in the database", estadoId)
-            );
-        } catch (DataIntegrityViolationException e){
+                String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
+
+        } catch (DataIntegrityViolationException e) {
             throw new IsBeingUsedException(
-                String.format("Id: %d is being used", estadoId)
-            );
+                String.format(MSG_ESTADO_EM_USO, estadoId));
         }
+    }
+
+    public Estado buscarOuFalhar(Long estadoId) {
+        return estadoRepository.findById(estadoId)
+            .orElseThrow(() -> new EntityNotFoundException(
+                String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
     }
 }

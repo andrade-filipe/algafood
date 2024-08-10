@@ -2,6 +2,7 @@ package com.esr.algafood.application.controller;
 
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.EntityNotFoundException;
+import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,7 +41,11 @@ public class RestauranteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante adicionar(@RequestBody Restaurante restaurante) {
+        try{
         return restauranteService.salvar(restaurante);
+        } catch (EntityNotFoundException e){
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{restauranteId}")
@@ -51,7 +56,11 @@ public class RestauranteController {
         BeanUtils.copyProperties(restaurante, restauranteAtual,
             "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 
-        return restauranteService.salvar(restauranteAtual);
+        try {
+            return restauranteService.salvar(restauranteAtual);
+        }catch (EntityNotFoundException e){
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PatchMapping("/{restauranteId}")

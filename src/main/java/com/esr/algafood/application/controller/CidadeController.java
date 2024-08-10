@@ -6,6 +6,7 @@ import com.esr.algafood.domain.entity.Estado;
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.EntityNotFoundException;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
+import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.repository.CidadeRepository;
 import com.esr.algafood.domain.service.CadastroCidadeService;
 import lombok.AllArgsConstructor;
@@ -37,7 +38,11 @@ public class CidadeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cidade adicionar(@RequestBody Cidade cidade) {
-        return cidadeService.salvar(cidade);
+        try{
+            return cidadeService.salvar(cidade);
+        } catch (EntityNotFoundException e){
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{cidadeId}")
@@ -47,7 +52,12 @@ public class CidadeController {
 
         BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
-        return cidadeService.salvar(cidadeAtual);
+        try{
+            return cidadeService.salvar(cidadeAtual);
+        } catch (EntityNotFoundException e){
+            throw new NegocioException(e.getMessage());
+        }
+
     }
 
     @DeleteMapping("/{cidadeId}")

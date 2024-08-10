@@ -29,47 +29,30 @@ public class CidadeController {
         return cidadeRepository.findAll();
     }
 
+    @GetMapping("/{cidadeId}")
+    public Cidade buscar(@PathVariable Long cidadeId) {
+        return cidadeService.buscarOuFalhar(cidadeId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
-        try {
-            cidade = cidadeService.salvar(cidade);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public Cidade adicionar(@RequestBody Cidade cidade) {
+        return cidadeService.salvar(cidade);
     }
 
     @PutMapping("/{cidadeId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade){
-        try {
-            Cidade currCidade = cidadeRepository.findById(cidadeId).get();
+    public Cidade atualizar(@PathVariable Long cidadeId,
+                            @RequestBody Cidade cidade) {
+        Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
 
-            if (currCidade != null) {
-                BeanUtils.copyProperties(cidade, currCidade, "id");
-                currCidade = cidadeService.salvar(currCidade);
-                return ResponseEntity.ok(currCidade);
-            }
-            return ResponseEntity.notFound().build();
+        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
 
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return cidadeService.salvar(cidadeAtual);
     }
 
     @DeleteMapping("/{cidadeId}")
-    public ResponseEntity<?> remover(@PathVariable Long cidadeId){
-        try{
-            cidadeService.excluir(cidadeId);
-            return ResponseEntity.noContent().build();
-
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-
-        }catch(IsBeingUsedException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body("Recurso cidadeId: " + cidadeId + " está sendo utilizado");
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long cidadeId) {
+        cidadeService.excluir(cidadeId);
     }
 }

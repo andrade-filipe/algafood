@@ -28,6 +28,12 @@ public class EstadoController {
         return estadoRepository.findAll();
     }
 
+    @GetMapping("/{estadoId}")
+    public Estado buscar(@PathVariable Long estadoId) {
+        return estadoService.buscarOuFalhar(estadoId);
+    }
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> adicionar(@RequestBody Estado estado) {
@@ -41,33 +47,19 @@ public class EstadoController {
     }
 
     @PutMapping("/{estadoId}")
-    public ResponseEntity<?> atualizar(@PathVariable Long estadoId, @RequestBody Estado estado){
-        try {
-            Estado currEstado = estadoRepository.findById(estadoId).get();
+    public Estado atualizar(@PathVariable Long estadoId,
+                            @RequestBody Estado estado) {
+        Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
 
-            if (currEstado != null) {
-                BeanUtils.copyProperties(estado, currEstado, "id");
-                currEstado = estadoService.salvar(currEstado);
-                return ResponseEntity.ok(currEstado);
-            }
-            return ResponseEntity.notFound().build();
+        BeanUtils.copyProperties(estado, estadoAtual, "id");
 
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        return estadoService.salvar(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")
-    public ResponseEntity<?> remover(@PathVariable Long estadoId){
-        try{
-            estadoService.excluir(estadoId);
-            return ResponseEntity.noContent().build();
-
-        }catch(EntityNotFoundException e){
-            return ResponseEntity.notFound().build();
-
-        }catch(IsBeingUsedException e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Recurso estadoId: " + estadoId + " está sendo utilizado");
-        }
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void remover(@PathVariable Long estadoId) {
+        estadoService.excluir(estadoId);
     }
+
 }

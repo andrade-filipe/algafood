@@ -1,6 +1,8 @@
 package com.esr.algafood.application.controller;
 
+import com.esr.algafood.application.exceptionhandler.Problem;
 import com.esr.algafood.domain.entity.Cidade;
+import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.exception.NOT_FOUND.EstadoNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.repository.CidadeRepository;
@@ -8,8 +10,10 @@ import com.esr.algafood.domain.service.CadastroCidadeService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -59,5 +63,27 @@ public class CidadeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cidadeId) {
         cidadeService.excluir(cidadeId);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> handleNotFoundException(EntityNotFoundException e){
+        Problem problema = Problem.builder()
+            .dahaHora(LocalDateTime.now())
+            .mensagem(e.getMessage())
+            .build();
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(problema);
+    }
+
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<?> handleBadRequestException(NegocioException e){
+        Problem problema = Problem.builder()
+            .dahaHora(LocalDateTime.now())
+            .mensagem(e.getMessage())
+            .build();
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(problema);
     }
 }

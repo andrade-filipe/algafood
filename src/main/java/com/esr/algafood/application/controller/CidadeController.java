@@ -56,7 +56,7 @@ public class CidadeController {
 
             return cidadeService.salvar(cidadeAtual);
         } catch (EstadoNotFoundException e){
-            throw new NegocioException(e.getMessage());
+            throw new NegocioException(e.getMessage(), e);
         }
 
     }

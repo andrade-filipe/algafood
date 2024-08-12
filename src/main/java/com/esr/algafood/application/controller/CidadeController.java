@@ -64,26 +64,4 @@ public class CidadeController {
     public void remover(@PathVariable Long cidadeId) {
         cidadeService.excluir(cidadeId);
     }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleNotFoundException(EntityNotFoundException e){
-        Problem problema = Problem.builder()
-            .dahaHora(LocalDateTime.now())
-            .mensagem(e.getMessage())
-            .build();
-        return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(problema);
-    }
-
-    @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<?> handleBadRequestException(NegocioException e){
-        Problem problema = Problem.builder()
-            .dahaHora(LocalDateTime.now())
-            .mensagem(e.getMessage())
-            .build();
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(problema);
-    }
 }

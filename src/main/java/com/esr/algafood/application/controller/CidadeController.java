@@ -49,11 +49,11 @@ public class CidadeController {
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId,
                             @RequestBody Cidade cidade) {
-        Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
-
-        BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-
         try{
+            Cidade cidadeAtual = cidadeService.buscarOuFalhar(cidadeId);
+
+            BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+
             return cidadeService.salvar(cidadeAtual);
         } catch (EstadoNotFoundException e){
             throw new NegocioException(e.getMessage());

@@ -10,4 +10,8 @@ public class EstadoNotFoundException extends EntityNotFoundException {
     public EstadoNotFoundException(String mensagem){
         super(mensagem);
     }
+
+    public EstadoNotFoundException(Long estadoId){
+        this(String.format("Não existe um cadastro de estado com código %d", estadoId));
+    }
 }

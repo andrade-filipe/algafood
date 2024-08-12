@@ -2,6 +2,7 @@ package com.esr.algafood.domain.service;
 
 import com.esr.algafood.domain.entity.Estado;
 import com.esr.algafood.domain.exception.EntityNotFoundException;
+import com.esr.algafood.domain.exception.EstadoNotFoundException;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.repository.EstadoRepository;
 import lombok.AllArgsConstructor;
@@ -16,9 +17,6 @@ public class CadastroEstadoService {
     private static final String MSG_ESTADO_EM_USO  =
         "Estado de código %d não pode ser removido, pois está em uso";
 
-    private static final String MSG_ESTADO_NAO_ENCONTRADO =
-        "Não existe um cadastro de estado com código %d";
-
     private EstadoRepository estadoRepository;
 
     public Estado salvar(Estado estado){
@@ -30,8 +28,7 @@ public class CadastroEstadoService {
             estadoRepository.deleteById(estadoId);
 
         } catch (EmptyResultDataAccessException e) {
-            throw new EntityNotFoundException(
-                String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId));
+            throw new EstadoNotFoundException(estadoId);
 
         } catch (DataIntegrityViolationException e) {
             throw new IsBeingUsedException(
@@ -41,7 +38,6 @@ public class CadastroEstadoService {
 
     public Estado buscarOuFalhar(Long estadoId) {
         return estadoRepository.findById(estadoId)
-            .orElseThrow(() -> new EntityNotFoundException(
-                String.format(MSG_ESTADO_NAO_ENCONTRADO, estadoId)));
+            .orElseThrow(() -> new EstadoNotFoundException(estadoId);
     }
 }

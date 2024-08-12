@@ -1,10 +1,7 @@
 package com.esr.algafood.application.controller;
 
-import com.esr.algafood.domain.entity.Cidade;
 import com.esr.algafood.domain.entity.Estado;
-import com.esr.algafood.domain.entity.Restaurante;
-import com.esr.algafood.domain.exception.EntityNotFoundException;
-import com.esr.algafood.domain.exception.IsBeingUsedException;
+import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.repository.EstadoRepository;
 import com.esr.algafood.domain.service.CadastroEstadoService;
 import lombok.AllArgsConstructor;

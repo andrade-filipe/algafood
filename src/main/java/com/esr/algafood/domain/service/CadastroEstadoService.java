@@ -1,8 +1,7 @@
 package com.esr.algafood.domain.service;
 
 import com.esr.algafood.domain.entity.Estado;
-import com.esr.algafood.domain.exception.EntityNotFoundException;
-import com.esr.algafood.domain.exception.EstadoNotFoundException;
+import com.esr.algafood.domain.exception.NOT_FOUND.EstadoNotFoundException;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.repository.EstadoRepository;
 import lombok.AllArgsConstructor;

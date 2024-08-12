@@ -1,20 +1,14 @@
 package com.esr.algafood.application.controller;
 
 import com.esr.algafood.domain.entity.Cozinha;
-import com.esr.algafood.domain.exception.EntityNotFoundException;
-import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.repository.CozinhaRepository;
 import com.esr.algafood.domain.service.CadastroCozinhaService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController

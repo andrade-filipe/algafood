@@ -1,11 +1,12 @@
-package com.esr.algafood.domain.exception;
+package com.esr.algafood.domain.exception.NOT_FOUND;
 
+import com.esr.algafood.domain.exception.NegocioException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class EntityNotFoundException extends NegocioException {
+public abstract class EntityNotFoundException extends NegocioException {
 
     private static final long serialVersionUID = 1L;
 

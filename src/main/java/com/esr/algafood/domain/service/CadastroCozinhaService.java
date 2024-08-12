@@ -1,7 +1,8 @@
 package com.esr.algafood.domain.service;
 
 import com.esr.algafood.domain.entity.Cozinha;
-import com.esr.algafood.domain.exception.EntityNotFoundException;
+import com.esr.algafood.domain.exception.NOT_FOUND.CozinhaNotFoundException;
+import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.repository.CozinhaRepository;
 import lombok.AllArgsConstructor;
@@ -26,9 +27,7 @@ public class CadastroCozinhaService {
         try{
             cozinhaRepository.deleteById(cozinhaId);
         } catch (EmptyResultDataAccessException e){
-            throw new EntityNotFoundException(
-                String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)
-            );
+            throw new CozinhaNotFoundException(cozinhaId);
         } catch (DataIntegrityViolationException e){
             throw new IsBeingUsedException(
                 String.format(MSG_COZINHA_EM_USO, cozinhaId)
@@ -38,9 +37,6 @@ public class CadastroCozinhaService {
 
     public Cozinha buscarOuFalhar(Long cozinhaId){
         return cozinhaRepository.findById(cozinhaId)
-            .orElseThrow(() -> new EntityNotFoundException(
-                String.format(MSG_COZINHA_NAO_ENCONTRADA, cozinhaId)
-                )
-            );
+            .orElseThrow(() -> new CozinhaNotFoundException(cozinhaId));
     }
 }

@@ -1,7 +1,4 @@
-package com.esr.algafood.domain.exception;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+package com.esr.algafood.domain.exception.NOT_FOUND;
 
 public class EstadoNotFoundException extends EntityNotFoundException {
 

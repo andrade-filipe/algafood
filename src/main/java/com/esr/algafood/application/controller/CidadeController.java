@@ -1,19 +1,13 @@
 package com.esr.algafood.application.controller;
 
 import com.esr.algafood.domain.entity.Cidade;
-import com.esr.algafood.domain.entity.Cozinha;
-import com.esr.algafood.domain.entity.Estado;
-import com.esr.algafood.domain.entity.Restaurante;
-import com.esr.algafood.domain.exception.EntityNotFoundException;
-import com.esr.algafood.domain.exception.EstadoNotFoundException;
-import com.esr.algafood.domain.exception.IsBeingUsedException;
+import com.esr.algafood.domain.exception.NOT_FOUND.EstadoNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.repository.CidadeRepository;
 import com.esr.algafood.domain.service.CadastroCidadeService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,7 +1,8 @@
 package com.esr.algafood.application.controller;
 
 import com.esr.algafood.domain.entity.Restaurante;
-import com.esr.algafood.domain.exception.EntityNotFoundException;
+import com.esr.algafood.domain.exception.NOT_FOUND.CozinhaNotFoundException;
+import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
@@ -9,7 +10,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +17,6 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import static com.esr.algafood.infrastructure.spec.RestauranteSpecs.*;
 
 @AllArgsConstructor
 @RestController
@@ -43,7 +40,7 @@ public class RestauranteController {
     public Restaurante adicionar(@RequestBody Restaurante restaurante) {
         try{
         return restauranteService.salvar(restaurante);
-        } catch (EntityNotFoundException e){
+        } catch (CozinhaNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
     }
@@ -58,7 +55,7 @@ public class RestauranteController {
 
         try {
             return restauranteService.salvar(restauranteAtual);
-        }catch (EntityNotFoundException e){
+        }catch (CozinhaNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
     }

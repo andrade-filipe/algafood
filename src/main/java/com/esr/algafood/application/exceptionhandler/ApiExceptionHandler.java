@@ -1,5 +1,6 @@
 package com.esr.algafood.application.exceptionhandler;
 
+import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,18 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(IsBeingUsedException.class)
+    public ResponseEntity<?> handleIsBeingUsed(IsBeingUsedException e){
+        Problem problema = Problem.builder()
+            .dahaHora(LocalDateTime.now())
+            .mensagem(e.getMessage())
+            .build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(problema);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(EntityNotFoundException e){
         Problem problema = Problem.builder()

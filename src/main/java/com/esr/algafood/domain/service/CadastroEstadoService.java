@@ -38,6 +38,6 @@ public class CadastroEstadoService {
 
     public Estado buscarOuFalhar(Long estadoId) {
         return estadoRepository.findById(estadoId)
-            .orElseThrow(() -> new EstadoNotFoundException(estadoId);
+            .orElseThrow(() -> new EstadoNotFoundException(estadoId));
     }
 }

@@ -5,6 +5,7 @@ import com.esr.algafood.domain.entity.Cozinha;
 import com.esr.algafood.domain.entity.Estado;
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.EntityNotFoundException;
+import com.esr.algafood.domain.exception.EstadoNotFoundException;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.repository.CidadeRepository;
@@ -40,7 +41,7 @@ public class CidadeController {
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try{
             return cidadeService.salvar(cidade);
-        } catch (EntityNotFoundException e){
+        } catch (EstadoNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
     }
@@ -54,7 +55,7 @@ public class CidadeController {
 
         try{
             return cidadeService.salvar(cidadeAtual);
-        } catch (EntityNotFoundException e){
+        } catch (EstadoNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
 

@@ -3,7 +3,6 @@ package com.esr.algafood.application.exceptionhandler;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -150,7 +149,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     private String joinPath(List<Reference> references) {
         return references.stream()
-            .map(ref -> ref.getFieldName())
+            .map(Reference::getFieldName)
             .collect(Collectors.joining("."));
     }
 }

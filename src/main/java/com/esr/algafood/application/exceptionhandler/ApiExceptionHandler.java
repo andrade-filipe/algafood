@@ -3,6 +3,8 @@ package com.esr.algafood.application.exceptionhandler;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.util.stream.Collectors;
+
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -20,8 +24,32 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
                                                                   WebRequest request) {
+        Throwable rootCause = ExceptionUtils.getRootCause(ex);
+
+        if(rootCause instanceof InvalidFormatException) {
+            return handleInvalidFormatException((InvalidFormatException) rootCause, headers,status,request);
+        }
+
         ProblemType problemType = ProblemType.REQUEST_NOT_READABLE;
         String detail = "O Corpo da Requisição é Invalido, procuro por erros de sintaxe.";
+
+        Problem problem = createProblemBuilder(status, problemType, detail).build();
+
+        return handleExceptionInternal(ex, problem, headers, status, request);
+    }
+
+    private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex,
+                                                                HttpHeaders headers,
+                                                                HttpStatus status,
+                                                                WebRequest request) {
+        ProblemType problemType = ProblemType.REQUEST_NOT_READABLE;
+
+        String path = ex.getPath().stream()
+            .map(reference -> reference.getFieldName())
+            .collect(Collectors.joining("."));
+
+        String detail = String.format("A propriedade '%s' recebeu o valor '%s', que é inválido. " +
+            "Corrija e informe um valor com o tipo '%s'", path, ex.getValue(), ex.getTargetType().getSimpleName());
 
         Problem problem = createProblemBuilder(status, problemType, detail).build();
 

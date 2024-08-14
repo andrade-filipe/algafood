@@ -11,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -34,9 +33,9 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         Throwable rootCause = ExceptionUtils.getRootCause(ex);
 
         if(rootCause instanceof InvalidFormatException) {
-            return handleInvalidFormatException((InvalidFormatException) rootCause, headers,status,request);
+            return handleInvalidFormat((InvalidFormatException) rootCause, headers,status,request);
         } else if (rootCause instanceof PropertyBindingException){
-            return handlePropertyBindingException((PropertyBindingException) rootCause, headers, status, request);
+            return handlePropertyBinding((PropertyBindingException) rootCause, headers, status, request);
         }
 
         ProblemType problemType = ProblemType.REQUEST_NOT_READABLE;
@@ -47,10 +46,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
-    private ResponseEntity<Object> handlePropertyBindingException(PropertyBindingException ex,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatus status,
-                                                                  WebRequest request) {
+    private ResponseEntity<Object> handlePropertyBinding(PropertyBindingException ex,
+                                                         HttpHeaders headers,
+                                                         HttpStatus status,
+                                                         WebRequest request) {
         ProblemType problemType = ProblemType.REQUEST_NOT_READABLE;
 
         String path = joinPath(ex.getPath());
@@ -64,10 +63,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
-    private ResponseEntity<Object> handleInvalidFormatException(InvalidFormatException ex,
-                                                                HttpHeaders headers,
-                                                                HttpStatus status,
-                                                                WebRequest request) {
+    private ResponseEntity<Object> handleInvalidFormat(InvalidFormatException ex,
+                                                       HttpHeaders headers,
+                                                       HttpStatus status,
+                                                       WebRequest request) {
         ProblemType problemType = ProblemType.REQUEST_NOT_READABLE;
 
         String path = joinPath(ex.getPath());
@@ -126,8 +125,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleNotFoundException(EntityNotFoundException ex,
-                                                     WebRequest request){
+    public ResponseEntity<?> handleNotFound(EntityNotFoundException ex,
+                                            WebRequest request){
         HttpStatus status = HttpStatus.NOT_FOUND;
         ProblemType problemType = ProblemType.ENTITY_NOT_FOUND;
         String detail = ex.getMessage();
@@ -139,8 +138,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<?> handleBadRequestException(NegocioException ex,
-                                                       WebRequest request){
+    public ResponseEntity<?> handleBadRequest(NegocioException ex,
+                                              WebRequest request){
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ProblemType problemType = ProblemType.USER_EXCEPTION;
         String detail = ex.getMessage();

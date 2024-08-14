@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ProblemType {
 
+    INVALID_PARAMETER("/parametro-invalido", "Parametro Inválio na URL"),
     REQUEST_NOT_READABLE("/requisição-não-processada", "Não foi Possível Processar a Requisição"),
     ENTITY_NOT_FOUND("/entidade-nao-encontrada", "Entidade não Encontrada"),
     IS_BEING_USED("/entidade-em-uso", "Entidade Em Uso"),

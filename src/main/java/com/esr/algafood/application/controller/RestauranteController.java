@@ -46,7 +46,7 @@ public class RestauranteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Restaurante adicionar(    @RequestBody
-                                     @Validated(Groups.CadastroRestaurante.class)
+                                     @Valid
                                      Restaurante restaurante) {
         try{
         return restauranteService.salvar(restaurante);

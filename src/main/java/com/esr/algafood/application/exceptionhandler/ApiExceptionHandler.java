@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -44,6 +45,67 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             .build();
 
         return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+    @ExceptionHandler(IsBeingUsedException.class)
+    public ResponseEntity<?> handleIsBeingUsed(IsBeingUsedException ex,
+                                               WebRequest request){
+
+        HttpStatus status = HttpStatus.CONFLICT;
+        ProblemType problemType = ProblemType.IS_BEING_USED;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, detail)
+            .userMessage("O recurso não pode ser excluido, pois está sendo utilizado")
+            .build();
+
+        return handleExceptionInternal(
+            ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<?> handleNotFound(EntityNotFoundException ex,
+                                            WebRequest request){
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ProblemType problemType = ProblemType.RESOURCE_NOT_FOUND;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, detail)
+            .userMessage("Recurso não foi Encontrado")
+            .build();
+
+        return handleExceptionInternal(
+            ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<?> handleBadRequest(NegocioException ex,
+                                              WebRequest request){
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ProblemType problemType = ProblemType.USER_EXCEPTION;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, detail)
+            .userMessage("Campos Inválidos")
+            .build();
+
+        return handleExceptionInternal(
+            ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
+        ProblemType problemType = ProblemType.INVALID_DATA;
+        String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente";
+
+        Problem problem = createProblemBuilder(status, problemType, detail)
+            .userMessage("Um ou mais campos inválidos")
+            .build();
+
+        return handleExceptionInternal(
+            ex, problem, new HttpHeaders(), status, request);
     }
 
     @Override
@@ -139,52 +201,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
 
-    @ExceptionHandler(IsBeingUsedException.class)
-    public ResponseEntity<?> handleIsBeingUsed(IsBeingUsedException ex,
-                                               WebRequest request){
-
-        HttpStatus status = HttpStatus.CONFLICT;
-        ProblemType problemType = ProblemType.IS_BEING_USED;
-        String detail = ex.getMessage();
-
-        Problem problem = createProblemBuilder(status, problemType, detail)
-            .userMessage("O recurso não pode ser excluido, pois está sendo utilizado")
-            .build();
-
-        return handleExceptionInternal(
-            ex, problem, new HttpHeaders(), status, request);
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleNotFound(EntityNotFoundException ex,
-                                            WebRequest request){
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        ProblemType problemType = ProblemType.RESOURCE_NOT_FOUND;
-        String detail = ex.getMessage();
-
-        Problem problem = createProblemBuilder(status, problemType, detail)
-            .userMessage("Recurso não foi Encontrado")
-            .build();
-
-        return handleExceptionInternal(
-            ex, problem, new HttpHeaders(), status, request);
-    }
-
-    @ExceptionHandler(NegocioException.class)
-    public ResponseEntity<?> handleBadRequest(NegocioException ex,
-                                              WebRequest request){
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ProblemType problemType = ProblemType.USER_EXCEPTION;
-        String detail = ex.getMessage();
-
-        Problem problem = createProblemBuilder(status, problemType, detail)
-            .userMessage("Campos Inválidos")
-            .build();
-
-        return handleExceptionInternal(
-            ex, problem, new HttpHeaders(), status, request);
-    }
-
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
                                                                    HttpHeaders headers,
@@ -202,6 +218,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
+
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex,

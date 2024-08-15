@@ -1,9 +1,12 @@
 package com.esr.algafood.domain.entity;
 
+import com.esr.algafood.domain.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,11 +19,13 @@ import java.util.List;
 @AllArgsConstructor
 public class Cozinha {
 
+    @NotNull(groups = Groups.CadastroRestaurante.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank
     private String nome;
 
     @JsonIgnore

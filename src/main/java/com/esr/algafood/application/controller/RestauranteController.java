@@ -3,6 +3,7 @@ package com.esr.algafood.application.controller;
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.NOT_FOUND.CozinhaNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
+import com.esr.algafood.domain.exception.ValidationException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -10,10 +11,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.SmartValidator;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +33,7 @@ import java.util.Map;
 public class RestauranteController {
     private RestauranteRepository restauranteRepository;
     private CadastroRestauranteService restauranteService;
+    private SmartValidator smartValidator;
 
     @GetMapping()
     public List<Restaurante> listar() {
@@ -74,8 +79,20 @@ public class RestauranteController {
         Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 
         merge(campos, restauranteAtual, request);
+        validate(restauranteAtual, "restaurante");
 
         return atualizar(restauranteId, restauranteAtual);
+    }
+
+    private void validate(Restaurante restaurante, String objectName) {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(restaurante, objectName);
+
+        smartValidator.validate(restaurante, errors);
+
+        if(errors.hasErrors()) {
+            throw new ValidationException(errors);
+
+        }
     }
 
     private void merge(Map<String, Object> dadosOrigem,

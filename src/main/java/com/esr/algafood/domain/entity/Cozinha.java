@@ -1,6 +1,6 @@
 package com.esr.algafood.domain.entity;
 
-import com.esr.algafood.domain.Groups;
+import com.esr.algafood.core.validation.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 

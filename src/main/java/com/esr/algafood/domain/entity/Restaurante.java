@@ -1,6 +1,7 @@
 package com.esr.algafood.domain.entity;
 
-import com.esr.algafood.domain.Groups;
+import com.esr.algafood.core.validation.Groups;
+import com.esr.algafood.core.validation.annotations.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -35,8 +36,9 @@ public class Restaurante {
     @NotBlank
     private String nome;
 
-    @NotNull
-    @PositiveOrZero
+//    @NotNull
+//    @PositiveOrZero
+    @TaxaFrete
     private BigDecimal taxaFrete;
 
     @Valid

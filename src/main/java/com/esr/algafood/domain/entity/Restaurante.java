@@ -1,8 +1,6 @@
 package com.esr.algafood.domain.entity;
 
 import com.esr.algafood.core.validation.Groups;
-import com.esr.algafood.core.validation.annotations.Multiplo;
-import com.esr.algafood.core.validation.annotations.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -20,6 +18,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.esr.algafood.core.validation.annotations.FreeDeliveryRule;
+
+@FreeDeliveryRule(fieldValue = "taxaFrete",
+    fieldDescription = "nome", mustHave = "FRETE GRÁTIS")
 @Entity
 @Getter
 @Setter
@@ -37,10 +39,10 @@ public class Restaurante {
     @NotBlank
     private String nome;
 
-//    @NotNull
-//    @PositiveOrZero
 //    @TaxaFrete
-    @Multiplo(numero = 5)
+//    @Multiplo(numero = 5)
+    @NotNull
+    @PositiveOrZero
     private BigDecimal taxaFrete;
 
     @Valid

@@ -1,6 +1,7 @@
 package com.esr.algafood.domain.entity;
 
 import com.esr.algafood.core.validation.Groups;
+import com.esr.algafood.core.validation.annotations.Multiplo;
 import com.esr.algafood.core.validation.annotations.TaxaFrete;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,7 +39,8 @@ public class Restaurante {
 
 //    @NotNull
 //    @PositiveOrZero
-    @TaxaFrete
+//    @TaxaFrete
+    @Multiplo(numero = 5)
     private BigDecimal taxaFrete;
 
     @Valid

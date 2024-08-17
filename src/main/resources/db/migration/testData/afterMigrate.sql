@@ -38,7 +38,7 @@ insert into cidade (nome, estado_id) values ('Aracaju', 2);
 insert into cozinha (id, nome) values (1, 'Tailandesa');
 insert into cozinha (id, nome) values (2, 'Brasileira');
 insert into cozinha (id, nome) values (3, 'Argentina');
-insert into cozinha (id, nome) values (4, 'Brasileira');
+insert into cozinha (id, nome) values (4, 'Indiana');
 
 insert into forma_pagamento (id, descricao) values (1, 'Cartão de crédito');
 insert into forma_pagamento (id, descricao) values (2, 'Cartão de débito');

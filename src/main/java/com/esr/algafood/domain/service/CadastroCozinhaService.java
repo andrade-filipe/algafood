@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -19,10 +20,13 @@ public class CadastroCozinhaService {
 
 
     private CozinhaRepository cozinhaRepository;
+
+    @Transactional
     public Cozinha salvar(Cozinha cozinha){
         return cozinhaRepository.save(cozinha);
     }
 
+    @Transactional
     public void excluir(Long cozinhaId){
         try{
             cozinhaRepository.deleteById(cozinhaId);

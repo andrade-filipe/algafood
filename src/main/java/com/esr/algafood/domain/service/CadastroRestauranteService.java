@@ -7,6 +7,7 @@ import com.esr.algafood.domain.exception.NOT_FOUND.RestauranteNotFoundException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class CadastroRestauranteService {
     private RestauranteRepository restauranteRepository;
     private CadastroCozinhaService cadastroCozinha;
 
+    @Transactional
     public Restaurante salvar(Restaurante restaurante){
         Long cozinhaId = restaurante.getCozinha().getId();
 

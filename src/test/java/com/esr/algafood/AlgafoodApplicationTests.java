@@ -2,9 +2,11 @@ package com.esr.algafood;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.hamcrest.Matchers;
+import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
@@ -18,14 +20,22 @@ class CadastroCozinhaIT {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private Flyway flyway;
+
+    @BeforeEach
+    public void setup(){
+        enableLoggingOfRequestAndResponseIfValidationFails();
+        RestAssured.port = port;
+        RestAssured.basePath = "/cozinhas";
+
+        flyway.migrate();
+    }
+
     @DisplayName("SHOULD return status 200 WHEN consulting Cozinha")
     @Test
     public void ConsultarCozinha(){
-        enableLoggingOfRequestAndResponseIfValidationFails();
-
         given()
-            .basePath("/cozinhas")
-            .port(port)
             .accept(ContentType.JSON)
         .when()
             .get()
@@ -36,17 +46,26 @@ class CadastroCozinhaIT {
     @DisplayName("SHOULD have 4 Cozinhas WHEN consulting /cozinha")
     @Test
     public void ConsultarQuatroCozinhas(){
-        enableLoggingOfRequestAndResponseIfValidationFails();
-
         given()
-            .basePath("/cozinhas")
-            .port(port)
             .accept(ContentType.JSON)
         .when()
             .get()
         .then()
             .body("", hasSize(4))
             .body("nome", hasItems("Brasileira", "Tailandesa"));
+    }
+
+    @Test
+    @DisplayName("SHOULD return status 201 WHEN registering Cozinha")
+    public void CadastroDeCozinha() {
+        given()
+            .body("{ \"nome\": \"Chinesa\" }")
+            .contentType(ContentType.JSON)
+            .accept(ContentType.JSON)
+        .when()
+            .post()
+        .then()
+            .statusCode(HttpStatus.CREATED.value());
     }
 
 

@@ -1,5 +1,6 @@
 package com.esr.algafood.application.controller;
 
+import com.esr.algafood.application.model.dto.RestauranteDTO;
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.NOT_FOUND.CozinhaNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
@@ -41,8 +42,9 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public Restaurante buscar(@PathVariable Long restauranteId) {
-        return restauranteService.buscarOuFalhar(restauranteId);
+    public RestauranteDTO buscar(@PathVariable Long restauranteId) {
+        return null;
+//        return restauranteService.buscarOuFalhar(restauranteId);
     }
 
     @PostMapping

@@ -43,8 +43,11 @@ public class RestauranteController {
 
     @GetMapping("/{restauranteId}")
     public RestauranteDTO buscar(@PathVariable Long restauranteId) {
-        return null;
-//        return restauranteService.buscarOuFalhar(restauranteId);
+        Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
+
+        RestauranteDTO restauranteDTO = new RestauranteDTO();
+
+        return restauranteDTO;
     }
 
     @PostMapping

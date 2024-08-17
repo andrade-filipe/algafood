@@ -37,7 +37,6 @@ public class Restaurante {
     @PositiveOrZero
     private BigDecimal taxaFrete;
 
-    @JsonIgnoreProperties("hibernateLazyInitializer")
     @Valid
     @ConvertGroup(to = Groups.CozinhaId.class)
     @NotNull
@@ -45,16 +44,13 @@ public class Restaurante {
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
-    @JsonIgnore
     @Embedded
     private Endereco endereco;
 
-    @JsonIgnore
     @CreationTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataCadastro;
 
-    @JsonIgnore
     @UpdateTimestamp
     @Column(nullable = false, columnDefinition = "datetime")
     private LocalDateTime dataAtualizacao;
@@ -65,7 +61,6 @@ public class Restaurante {
         inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
     private List<FormaPagamento> formasPagamento = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurante")
     private List<Produto> produtos = new ArrayList<>();
 }

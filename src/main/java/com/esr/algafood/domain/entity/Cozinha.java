@@ -11,12 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
-@AllArgsConstructor
 public class Cozinha {
 
     @NotNull(groups = Groups.CozinhaId.class)

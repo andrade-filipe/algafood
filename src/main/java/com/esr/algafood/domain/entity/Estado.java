@@ -11,12 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
-@AllArgsConstructor
 public class Estado {
 
     @NotNull(groups = Groups.EstadoId.class)

@@ -18,17 +18,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.esr.algafood.core.validation.annotations.FreeDeliveryRule;
-
-@FreeDeliveryRule(fieldValue = "taxaFrete",
-    fieldDescription = "nome", mustHave = "FRETE GRÁTIS")
 @Entity
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
-@AllArgsConstructor
 public class Restaurante {
 
     @Id
@@ -45,12 +37,12 @@ public class Restaurante {
     @PositiveOrZero
     private BigDecimal taxaFrete;
 
+    @JsonIgnoreProperties("hibernateLazyInitializer")
     @Valid
     @ConvertGroup(to = Groups.CozinhaId.class)
     @NotNull
-    @JsonIgnoreProperties("hibernateLazyInitializer")
     @ManyToOne(fetch = FetchType.LAZY) // carrega somente se necessário
-    @JoinColumn(name = "cozinha_id")
+    @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;
 
     @JsonIgnore

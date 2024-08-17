@@ -10,12 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 
 @Entity
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Builder
-@AllArgsConstructor
 public class Cidade {
 
     @Id

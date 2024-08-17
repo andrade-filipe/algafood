@@ -1,8 +1,11 @@
 package com.esr.algafood;
 
+import com.esr.algafood.domain.entity.Cozinha;
+import com.esr.algafood.domain.repository.CozinhaRepository;
+import com.esr.algafood.util.DatabaseCleaner;
+import com.esr.algafood.util.ResourceUtils;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,8 +25,20 @@ class CadastroCozinhaIT {
     @LocalServerPort
     private int port;
 
+//    @Autowired
+//    private Flyway flyway;
+
     @Autowired
-    private Flyway flyway;
+    private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    private CozinhaRepository cozinhaRepository;
+
+    private static final int NON_EXISTENT_COZINHA_ID = 100;
+
+    private Cozinha cozinhaItaliana;
+    private int countCozinhas;
+    private String jsonSuccessCozinhaChinesa;
 
     @BeforeEach
     public void setup(){
@@ -31,10 +46,16 @@ class CadastroCozinhaIT {
         RestAssured.port = port;
         RestAssured.basePath = "/cozinhas";
 
-        flyway.migrate();
+        databaseCleaner.clearTables();
+        setupDatabase();
+
+        jsonSuccessCozinhaChinesa = ResourceUtils.getContentFromResource(
+            "/json/success/CadastroCozinhaChinesa.json");
+
+//        flyway.migrate();
     }
 
-    @DisplayName("SHOULD return status 200 WHEN consulting Cozinha")
+    @DisplayName("SHOULD return status 200 WHEN reading Cozinha")
     @Test
     public void ConsultarCozinha(){
         given()
@@ -45,29 +66,66 @@ class CadastroCozinhaIT {
             .statusCode(HttpStatus.OK.value());
     }
 
-    @DisplayName("SHOULD have 4 Cozinhas WHEN consulting /cozinha")
+    @DisplayName("SHOULD appear Cozinhas WHEN reading /cozinha")
     @Test
-    public void ConsultarQuatroCozinhas(){
+    public void ConsultarVariasCozinhas(){
         given()
             .accept(ContentType.JSON)
         .when()
             .get()
         .then()
-            .body("", hasSize(4))
-            .body("nome", hasItems("Brasileira", "Tailandesa"));
+            .body("", hasSize(countCozinhas))
+            .body("nome", hasItems("Brasileira", "Italiana"));
     }
 
     @Test
     @DisplayName("SHOULD return status 201 WHEN registering Cozinha")
     public void CadastroDeCozinha() {
         given()
-            .body("{ \"nome\": \"Chinesa\" }")
+            .body(jsonSuccessCozinhaChinesa)
             .contentType(ContentType.JSON)
             .accept(ContentType.JSON)
         .when()
             .post()
         .then()
             .statusCode(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    @DisplayName("SHOULD return status 200 and correct name WHEN reading Cozinha of id 1")
+    public void ConsultarCozinhaExistente(){
+        given()
+            .pathParam("cozinhaId", cozinhaItaliana.getId())
+            .accept(ContentType.JSON)
+        .when()
+            .get("/{cozinhaId}")
+        .then()
+            .statusCode(HttpStatus.OK.value())
+            .body("nome", equalTo(cozinhaItaliana.getNome()));
+    }
+
+    @Test
+    @DisplayName("SHOULD return status 404 WHEN reading a Cozinha of non existent id")
+    public void ConsultarCozinhaInexistente(){
+        given()
+            .pathParam("cozinhaId", NON_EXISTENT_COZINHA_ID)
+            .accept(ContentType.JSON)
+        .when()
+            .get("/{cozinhaId}")
+        .then()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    private void setupDatabase(){
+        Cozinha cozinhaBrasileira = new Cozinha();
+        cozinhaBrasileira.setNome("Brasileira");
+        cozinhaRepository.save(cozinhaBrasileira);
+
+        Cozinha cozinhaItaliana = new Cozinha();
+        cozinhaItaliana.setNome("Italiana");
+        cozinhaRepository.save(cozinhaItaliana);
+
+        countCozinhas = (int) cozinhaRepository.count();
     }
 
 

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.*;
@@ -16,7 +17,7 @@ public class Problem {
 
     //RFC 7807
     private Integer status;
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
     private String type;
     private String title;
     private String detail;

@@ -1,9 +1,7 @@
 package com.esr.algafood.application.controller;
 
-import com.esr.algafood.application.model.dto.CozinhaDTO;
 import com.esr.algafood.application.model.dto.RestauranteDTO;
 import com.esr.algafood.application.model.input.RestauranteInput;
-import com.esr.algafood.domain.entity.Cozinha;
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.NOT_FOUND.CozinhaNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
@@ -15,7 +13,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -30,7 +27,10 @@ import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import static com.esr.algafood.application.assembler.RestauranteInputDisassembler.toDomainObject;
+import static com.esr.algafood.application.assembler.RestauranteModelAssembler.toCollectionModel;
+import static com.esr.algafood.application.assembler.RestauranteModelAssembler.toModel;
 
 @AllArgsConstructor
 @RestController
@@ -79,19 +79,6 @@ public class RestauranteController {
         }
     }
 
-    // DEPRECATED
-//    @PatchMapping("/{restauranteId}")
-//    public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId,
-//                                        @RequestBody Map<String, Object> campos,
-//                                        HttpServletRequest request) {
-//        Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
-//
-//        merge(campos, restauranteAtual, request);
-//        validate(restauranteAtual, "restaurante");
-//
-//        return atualizar(restauranteId, restauranteAtual);
-//    }
-
     private void validate(Restaurante restaurante, String objectName) {
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(restaurante, objectName);
 
@@ -131,38 +118,6 @@ public class RestauranteController {
 
     }
 
-    private static RestauranteDTO toModel(Restaurante restaurante) {
-        CozinhaDTO cozinhaDTO = new CozinhaDTO();
-        cozinhaDTO.setId(restaurante.getCozinha().getId());
-        cozinhaDTO.setNome(restaurante.getCozinha().getNome());
-
-        RestauranteDTO restauranteDTO = new RestauranteDTO();
-        restauranteDTO.setId(restaurante.getId());
-        restauranteDTO.setNome(restaurante.getNome());
-        restauranteDTO.setTaxaFrete(restaurante.getTaxaFrete());
-        restauranteDTO.setCozinha(cozinhaDTO);
-        return restauranteDTO;
-    }
-
-    private List<RestauranteDTO> toCollectionModel(List<Restaurante> restaurantes) {
-        return restaurantes.stream()
-            .map(RestauranteController::toModel)
-            .collect(Collectors.toList());
-    }
-
-    private Restaurante toDomainObject(RestauranteInput restauranteInput){
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(restauranteInput.getCozinha().getId());
-
-        Restaurante restaurante = new Restaurante();
-
-        restaurante.setNome(restauranteInput.getNome());
-        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-        restaurante.setCozinha(cozinha);
-
-        return restaurante;
-    }
-
     @GetMapping("/teste")
     public List<Restaurante> teste(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal){
         return restauranteRepository.find(nome,taxaFreteInicial,taxaFreteFinal);
@@ -173,4 +128,17 @@ public class RestauranteController {
 
         return restauranteRepository.findComFreteGratis(nome);
     }
+
+    // DEPRECATED
+//    @PatchMapping("/{restauranteId}")
+//    public RestauranteDTO atualizarParcial(@PathVariable Long restauranteId,
+//                                        @RequestBody Map<String, Object> campos,
+//                                        HttpServletRequest request) {
+//        Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
+//
+//        merge(campos, restauranteAtual, request);
+//        validate(restauranteAtual, "restaurante");
+//
+//        return atualizar(restauranteId, restauranteAtual);
+//    }
 }

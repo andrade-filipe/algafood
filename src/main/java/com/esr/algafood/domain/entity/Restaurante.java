@@ -6,11 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.groups.ConvertGroup;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -26,18 +21,10 @@ public class Restaurante {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @NotBlank
     private String nome;
 
-//    @TaxaFrete
-//    @Multiplo(numero = 5)
-    @NotNull
-    @PositiveOrZero
     private BigDecimal taxaFrete;
 
-    @Valid
-    @ConvertGroup(to = Groups.CozinhaId.class)
-    @NotNull
     @ManyToOne(fetch = FetchType.LAZY) // carrega somente se necessário
     @JoinColumn(name = "cozinha_id", nullable = false)
     private Cozinha cozinha;

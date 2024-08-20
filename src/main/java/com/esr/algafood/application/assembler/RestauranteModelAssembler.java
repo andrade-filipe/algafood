@@ -1,31 +1,27 @@
 package com.esr.algafood.application.assembler;
 
-import com.esr.algafood.application.controller.RestauranteController;
-import com.esr.algafood.application.model.dto.CozinhaDTO;
 import com.esr.algafood.application.model.dto.RestauranteDTO;
 import com.esr.algafood.domain.entity.Restaurante;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class RestauranteModelAssembler {
 
-    public static RestauranteDTO toModel(Restaurante restaurante) {
-        CozinhaDTO cozinhaDTO = new CozinhaDTO();
-        cozinhaDTO.setId(restaurante.getCozinha().getId());
-        cozinhaDTO.setNome(restaurante.getCozinha().getNome());
+    @Autowired
+    private ModelMapper modelMapper;
 
-        RestauranteDTO restauranteDTO = new RestauranteDTO();
-        restauranteDTO.setId(restaurante.getId());
-        restauranteDTO.setNome(restaurante.getNome());
-        restauranteDTO.setTaxaFrete(restaurante.getTaxaFrete());
-        restauranteDTO.setCozinha(cozinhaDTO);
-        return restauranteDTO;
+    public RestauranteDTO toModel(Restaurante restaurante) {
+        return modelMapper.map(restaurante, RestauranteDTO.class);
     }
 
-    public static List<RestauranteDTO> toCollectionModel(List<Restaurante> restaurantes) {
+    public List<RestauranteDTO> toCollectionModel(List<Restaurante> restaurantes) {
         return restaurantes.stream()
-            .map(RestauranteModelAssembler::toModel)
+            .map(restaurante -> toModel(restaurante))
             .collect(Collectors.toList());
     }
 }

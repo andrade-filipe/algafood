@@ -1,21 +1,18 @@
 package com.esr.algafood.application.assembler;
 
 import com.esr.algafood.application.model.input.RestauranteInput;
-import com.esr.algafood.domain.entity.Cozinha;
 import com.esr.algafood.domain.entity.Restaurante;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class RestauranteInputDisassembler {
 
-    public static Restaurante toDomainObject(RestauranteInput restauranteInput){
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(restauranteInput.getCozinha().getId());
+    @Autowired
+    private ModelMapper modelMapper;
 
-        Restaurante restaurante = new Restaurante();
-
-        restaurante.setNome(restauranteInput.getNome());
-        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-        restaurante.setCozinha(cozinha);
-
-        return restaurante;
+    public Restaurante toDomainObject(RestauranteInput restauranteInput){
+        return modelMapper.map(restauranteInput, Restaurante.class);
     }
 }

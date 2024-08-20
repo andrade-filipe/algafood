@@ -1,5 +1,7 @@
 package com.esr.algafood.application.controller;
 
+import com.esr.algafood.application.assembler.RestauranteInputDisassembler;
+import com.esr.algafood.application.assembler.RestauranteModelAssembler;
 import com.esr.algafood.application.model.dto.RestauranteDTO;
 import com.esr.algafood.application.model.input.RestauranteInput;
 import com.esr.algafood.domain.entity.Restaurante;
@@ -28,10 +30,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-import static com.esr.algafood.application.assembler.RestauranteInputDisassembler.toDomainObject;
-import static com.esr.algafood.application.assembler.RestauranteModelAssembler.toCollectionModel;
-import static com.esr.algafood.application.assembler.RestauranteModelAssembler.toModel;
-
 @AllArgsConstructor
 @RestController
 @RequestMapping("/restaurantes")
@@ -39,16 +37,18 @@ public class RestauranteController {
     private RestauranteRepository restauranteRepository;
     private CadastroRestauranteService restauranteService;
     private SmartValidator smartValidator;
+    private RestauranteModelAssembler restauranteAssembler;
+    private RestauranteInputDisassembler restauranteDisassembler;
 
     @GetMapping()
     public List<RestauranteDTO> listar() {
-        return toCollectionModel(restauranteRepository.findAll());
+        return restauranteAssembler.toCollectionModel(restauranteRepository.findAll());
     }
 
     @GetMapping("/{restauranteId}")
     public RestauranteDTO buscar(@PathVariable Long restauranteId) {
         Restaurante restaurante = restauranteService.buscarOuFalhar(restauranteId);
-        return toModel(restaurante);
+        return restauranteAssembler.toModel(restaurante);
     }
 
     @PostMapping
@@ -56,8 +56,8 @@ public class RestauranteController {
     public RestauranteDTO adicionar( @RequestBody
                                      @Valid RestauranteInput restauranteInput) {
         try{
-            Restaurante restaurante = toDomainObject(restauranteInput);
-            return toModel(restauranteService.salvar(restaurante));
+            Restaurante restaurante = restauranteDisassembler.toDomainObject(restauranteInput);
+            return restauranteAssembler.toModel(restauranteService.salvar(restaurante));
         } catch (CozinhaNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
@@ -66,14 +66,14 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public RestauranteDTO atualizar(@PathVariable Long restauranteId,
                                  @RequestBody @Valid RestauranteInput restauranteInput) {
-        Restaurante restaurante = toDomainObject(restauranteInput);
+        Restaurante restaurante = restauranteDisassembler.toDomainObject(restauranteInput);
         Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 
         BeanUtils.copyProperties(restaurante, restauranteAtual,
             "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
 
         try {
-            return toModel(restauranteService.salvar(restauranteAtual));
+            return restauranteAssembler.toModel(restauranteService.salvar(restauranteAtual));
         }catch (CozinhaNotFoundException e){
             throw new NegocioException(e.getMessage());
         }

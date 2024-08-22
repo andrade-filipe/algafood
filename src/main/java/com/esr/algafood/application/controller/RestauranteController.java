@@ -66,11 +66,9 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public RestauranteDTO atualizar(@PathVariable Long restauranteId,
                                  @RequestBody @Valid RestauranteInput restauranteInput) {
-        Restaurante restaurante = restauranteDisassembler.toDomainObject(restauranteInput);
         Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 
-        BeanUtils.copyProperties(restaurante, restauranteAtual,
-            "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+        restauranteDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
         try {
             return restauranteAssembler.toModel(restauranteService.salvar(restauranteAtual));

@@ -1,4 +1,4 @@
-package com.esr.algafood.application.assembler;
+package com.esr.algafood.application.assembler.disassemblers;
 
 import com.esr.algafood.application.model.dto.RestauranteDTO;
 import com.esr.algafood.domain.entity.Restaurante;

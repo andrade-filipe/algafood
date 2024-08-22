@@ -1,4 +1,4 @@
-package com.esr.algafood.application.assembler;
+package com.esr.algafood.application.assembler.disassemblers;
 
 import com.esr.algafood.application.model.input.RestauranteInput;
 import com.esr.algafood.domain.entity.Cozinha;

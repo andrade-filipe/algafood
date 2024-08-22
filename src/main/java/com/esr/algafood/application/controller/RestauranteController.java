@@ -1,7 +1,7 @@
 package com.esr.algafood.application.controller;
 
-import com.esr.algafood.application.assembler.RestauranteInputDisassembler;
-import com.esr.algafood.application.assembler.RestauranteModelAssembler;
+import com.esr.algafood.application.assembler.disassemblers.RestauranteInputDisassembler;
+import com.esr.algafood.application.assembler.disassemblers.RestauranteModelAssembler;
 import com.esr.algafood.application.model.dto.RestauranteDTO;
 import com.esr.algafood.application.model.input.RestauranteInput;
 import com.esr.algafood.domain.entity.Restaurante;
@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.server.ServletServerHttpRequest;

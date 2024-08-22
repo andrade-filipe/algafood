@@ -1,5 +1,9 @@
 package com.esr.algafood.application.controller;
 
+import com.esr.algafood.application.assembler.assemblers.EstadoDTOAssembler;
+import com.esr.algafood.application.assembler.disassemblers.EstadoInputDisassembler;
+import com.esr.algafood.application.model.dto.EstadoDTO;
+import com.esr.algafood.application.model.input.EstadoInput;
 import com.esr.algafood.domain.entity.Estado;
 import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
 import com.esr.algafood.domain.repository.EstadoRepository;
@@ -20,38 +24,35 @@ public class EstadoController {
 
     private EstadoRepository estadoRepository;
     private CadastroEstadoService estadoService;
+    private EstadoDTOAssembler estadoDTOAssembler;
+    private EstadoInputDisassembler estadoInputDisassembler;
 
     @GetMapping
-    public List<Estado> listar(){
-        return estadoRepository.findAll();
+    public List<EstadoDTO> listar(){
+        return estadoDTOAssembler.toCollectionModel(estadoRepository.findAll());
     }
 
     @GetMapping("/{estadoId}")
-    public Estado buscar(@PathVariable Long estadoId) {
-        return estadoService.buscarOuFalhar(estadoId);
+    public EstadoDTO buscar(@PathVariable Long estadoId) {
+        return estadoDTOAssembler.toModel(estadoService.buscarOuFalhar(estadoId));
     }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> adicionar(@RequestBody @Valid Estado estado) {
-        try {
-            estado = estadoService.salvar(estado);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(estado);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public EstadoDTO adicionar(@RequestBody @Valid EstadoInput estadoInput) {
+        Estado estado = estadoInputDisassembler.toDomainObject(estadoInput);
+        estado = estadoRepository.save(estado);
+        return estadoDTOAssembler.toModel(estado);
     }
 
     @PutMapping("/{estadoId}")
-    public Estado atualizar(@PathVariable Long estadoId,
-                            @RequestBody @Valid Estado estado) {
+    public EstadoDTO atualizar(@PathVariable Long estadoId,
+                            @RequestBody @Valid EstadoInput estadoInput) {
         Estado estadoAtual = estadoService.buscarOuFalhar(estadoId);
-
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
-
-        return estadoService.salvar(estadoAtual);
+        estadoInputDisassembler.copyToDomainObject(estadoInput, estadoAtual);
+        estadoAtual = estadoRepository.save(estadoAtual);
+        return estadoDTOAssembler.toModel(estadoAtual);
     }
 
     @DeleteMapping("/{estadoId}")

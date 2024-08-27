@@ -1,11 +1,11 @@
 package com.esr.algafood.domain.entity;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Embeddable
+@Data
 public class Endereco {
 
     @Column(name = "endereco_cep")

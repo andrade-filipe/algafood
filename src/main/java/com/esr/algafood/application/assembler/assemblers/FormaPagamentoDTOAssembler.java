@@ -2,6 +2,7 @@ package com.esr.algafood.application.assembler.assemblers;
 
 import com.esr.algafood.application.model.dto.FormaPagamentoDTO;
 import com.esr.algafood.domain.entity.FormaPagamento;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,9 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@AllArgsConstructor
 public class FormaPagamentoDTOAssembler {
 
-    @Autowired
     private ModelMapper modelMapper;
 
     public FormaPagamentoDTO toModel(FormaPagamento formaPagamento) {

@@ -3,14 +3,15 @@ package com.esr.algafood.application.assembler.disassemblers;
 import com.esr.algafood.application.model.input.RestauranteInput;
 import com.esr.algafood.domain.entity.Cozinha;
 import com.esr.algafood.domain.entity.Restaurante;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class RestauranteInputDisassembler {
 
-    @Autowired
     private ModelMapper modelMapper;
 
     public Restaurante toDomainObject(RestauranteInput restauranteInput){

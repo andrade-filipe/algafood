@@ -52,8 +52,7 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestauranteDTO adicionar( @RequestBody
-                                     @Valid RestauranteInput restauranteInput) {
+    public RestauranteDTO adicionar( @RequestBody @Valid RestauranteInput restauranteInput) {
         try{
             Restaurante restaurante = restauranteDisassembler.toDomainObject(restauranteInput);
             return restauranteAssembler.toModel(restauranteService.salvar(restaurante));
@@ -64,7 +63,7 @@ public class RestauranteController {
 
     @PutMapping("/{restauranteId}")
     public RestauranteDTO atualizar(@PathVariable Long restauranteId,
-                                 @RequestBody @Valid RestauranteInput restauranteInput) {
+                                    @RequestBody @Valid RestauranteInput restauranteInput) {
         Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 
         restauranteDisassembler.copyToDomainObject(restauranteInput, restauranteAtual);
@@ -74,6 +73,18 @@ public class RestauranteController {
         }catch (CozinhaNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
+    }
+
+    @PutMapping("/{restauranteId}/ativar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long restauranteId) {
+        restauranteService.ativar(restauranteId);
+    }
+
+    @DeleteMapping("/{restauranteId}/ativar")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void desativar(@PathVariable Long restauranteId) {
+        restauranteService.desativar(restauranteId);
     }
 
     private void validate(Restaurante restaurante, String objectName) {

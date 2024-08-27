@@ -5,10 +5,12 @@ import com.esr.algafood.application.assembler.disassemblers.RestauranteModelAsse
 import com.esr.algafood.application.model.dto.RestauranteDTO;
 import com.esr.algafood.application.model.input.RestauranteInput;
 import com.esr.algafood.domain.entity.Restaurante;
+import com.esr.algafood.domain.exception.NOT_FOUND.CidadeNotFoundException;
 import com.esr.algafood.domain.exception.NOT_FOUND.CozinhaNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.exception.ValidationException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
+import com.esr.algafood.domain.service.CadastroCidadeService;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,7 +58,7 @@ public class RestauranteController {
         try{
             Restaurante restaurante = restauranteDisassembler.toDomainObject(restauranteInput);
             return restauranteAssembler.toModel(restauranteService.salvar(restaurante));
-        } catch (CozinhaNotFoundException e){
+        } catch (CozinhaNotFoundException | CidadeNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
     }
@@ -70,7 +72,7 @@ public class RestauranteController {
 
         try {
             return restauranteAssembler.toModel(restauranteService.salvar(restauranteAtual));
-        }catch (CozinhaNotFoundException e){
+        }catch (CozinhaNotFoundException | CidadeNotFoundException e){
             throw new NegocioException(e.getMessage());
         }
     }

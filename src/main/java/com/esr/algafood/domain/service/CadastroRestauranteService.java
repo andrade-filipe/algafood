@@ -1,5 +1,6 @@
 package com.esr.algafood.domain.service;
 
+import com.esr.algafood.domain.entity.Cidade;
 import com.esr.algafood.domain.entity.Cozinha;
 import com.esr.algafood.domain.entity.Restaurante;
 import com.esr.algafood.domain.exception.NOT_FOUND.EntityNotFoundException;
@@ -15,14 +16,18 @@ public class CadastroRestauranteService {
 
     private RestauranteRepository restauranteRepository;
     private CadastroCozinhaService cadastroCozinha;
+    private CadastroCidadeService cadastroCidade;
 
     @Transactional
     public Restaurante salvar(Restaurante restaurante){
         Long cozinhaId = restaurante.getCozinha().getId();
+        Long cidadeId = restaurante.getEndereco().getCidade().getId();
 
         Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+        Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
 
         return restauranteRepository.save(restaurante);
     }

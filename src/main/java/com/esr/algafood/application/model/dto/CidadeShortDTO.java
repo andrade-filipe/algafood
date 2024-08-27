@@ -8,5 +8,5 @@ import lombok.Setter;
 public class CidadeShortDTO {
     private Long id;
     private String nome;
-    private String estado;
+    private String estadoNome;
 }

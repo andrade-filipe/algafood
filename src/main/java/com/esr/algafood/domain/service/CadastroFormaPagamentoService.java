@@ -4,12 +4,14 @@ import com.esr.algafood.domain.entity.FormaPagamento;
 import com.esr.algafood.domain.exception.IsBeingUsedException;
 import com.esr.algafood.domain.exception.NOT_FOUND.FormaPagamentoNotFoundException;
 import com.esr.algafood.domain.repository.FormaPagamentoRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@AllArgsConstructor
 public class CadastroFormaPagamentoService {
 
     private static final String MSG_FORMA_PAGAMENTO_EM_USO

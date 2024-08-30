@@ -1,6 +1,5 @@
 package com.esr.algafood.domain.entity;
 
-import com.esr.algafood.core.validation.Groups;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -57,5 +56,13 @@ public class Restaurante {
 
     public void desativar(){
         setAtivo(Boolean.FALSE);
+    }
+
+    public void adicionarFormaPagamento(FormaPagamento formaPagamento) {
+        getFormasPagamento().add(formaPagamento);
+    }
+
+    public void removerFormaPagamento(FormaPagamento formaPagamento) {
+        getFormasPagamento().remove(formaPagamento);
     }
 }

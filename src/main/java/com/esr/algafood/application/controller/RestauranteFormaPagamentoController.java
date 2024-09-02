@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/formas-pagamento")
 public class RestauranteFormaPagamentoController {
-    private final CadastroRestauranteService cadastroRestauranteService;
+    private CadastroRestauranteService cadastroRestauranteService;
     private CadastroRestauranteService restauranteService;
     private FormaPagamentoDTOAssembler formaPagamentoAssembler;
 

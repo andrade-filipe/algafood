@@ -10,7 +10,6 @@ import com.esr.algafood.domain.exception.NOT_FOUND.CozinhaNotFoundException;
 import com.esr.algafood.domain.exception.NegocioException;
 import com.esr.algafood.domain.exception.ValidationException;
 import com.esr.algafood.domain.repository.RestauranteRepository;
-import com.esr.algafood.domain.service.CadastroCidadeService;
 import com.esr.algafood.domain.service.CadastroRestauranteService;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
